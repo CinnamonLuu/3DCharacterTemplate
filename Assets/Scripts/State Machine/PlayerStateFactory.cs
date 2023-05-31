@@ -20,13 +20,22 @@ public class PlayerStateFactory
     {
         return new PlayerRunState(context, this);
     }
-    public BaseState Jump() 
+    public BaseState Airborne() 
     { 
-        return new PlayerJumpState(context, this);
+        return new PlayerAirborneState(context, this);
     }
     public BaseState Grounded() 
     {
         return new PlayerGroundedState(context, this);
     }
 
+    public BaseState Crouch()
+    {
+        return new PlayerCrouchState(context, this);
+    }
+    
+    public BaseState Standing()
+    {
+        return new PlayerStandingState(context, this);
+    }
 }

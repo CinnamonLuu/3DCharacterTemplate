@@ -5,14 +5,14 @@ using UnityEngine;
 public class PlayerGroundedState : BaseState
 {
 
-    public PlayerGroundedState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) : base(currentContext, playerStateFactory) 
+    public PlayerGroundedState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) : base(currentContext, playerStateFactory)
     {
         isRootState = true;
         InitializeSubState();
     }
 
     public override void EnterState()
-    { 
+    {
         context.CurrentMovementY = context.GroundedGravity;
     }
 
@@ -24,29 +24,26 @@ public class PlayerGroundedState : BaseState
 
     public override void ExitState()
     {
-        
+
     }
 
     public override void InitializeSubState()
     {
-        if(!context.IsMovementPressed && !context.IsRunPressed)
+        if (context.IsCrouchPressed)
         {
-            SetSubState(factory.Idle());
-        }else if(context.IsMovementPressed && !context.IsRunPressed)
-        {
-            SetSubState(factory.Walk());
+            SetSubState(factory.Crouch());
         }
-        else if (context.IsMovementPressed && context.IsRunPressed)
+        else if(!context.IsCrouchPressed)
         {
-            SetSubState(factory.Run());
+            SetSubState(factory.Standing());
         }
     }
 
     public override void CheckSwitchState()
     {
-        if(context.IsJumpPressed)
+        if (context.IsJumpPressed )//|| !context.CharacterController.isGrounded)
         {
-            SwitchState(factory.Jump());
+            SwitchState(factory.Airborne());
         }
     }
 }

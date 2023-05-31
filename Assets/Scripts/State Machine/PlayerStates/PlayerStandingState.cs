@@ -2,22 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerJumpState : BaseState
+public class PlayerStandingState : BaseState
 {
-    public PlayerJumpState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) : base(currentContext, playerStateFactory) 
-    { 
-        isRootState = true;
+    public PlayerStandingState(PlayerStateMachine currentContext, PlayerStateFactory currentFactory) : base(currentContext, currentFactory) 
+    {
         InitializeSubState();
     }
 
     public override void EnterState()
     {
-        HandleJump();
+        context.Animator.SetBool(context.IsCrouchingHash, false);
+    }
+
+    public override void UpdateState()
+    {
+        CheckSwitchState();
     }
 
     public override void ExitState()
     {
-        
+        //throw new System.NotImplementedException();
     }
 
     public override void InitializeSubState()
@@ -36,28 +40,11 @@ public class PlayerJumpState : BaseState
         }
     }
 
-    public override void UpdateState()
-    {
-        HandleGravity();
-        CheckSwitchState();
-    }
-
     public override void CheckSwitchState()
     {
-        if (context.CharacterController.isGrounded)
+        if (context.IsCrouchPressed)
         {
-            SwitchState(factory.Grounded());
+            SwitchState(factory.Crouch());
         }
-    }
-
-    private void HandleJump()
-    {
-        context.IsJumping = true;
-        context.CurrentMovementY = context.InitialJumpVelocity;
-    }
-
-    private void HandleGravity() 
-    {
-        context.CurrentMovementY += context.Gravity * Time.deltaTime;
     }
 }

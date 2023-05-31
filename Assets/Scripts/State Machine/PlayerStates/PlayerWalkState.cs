@@ -9,19 +9,18 @@ public class PlayerWalkState : BaseState
     public override void EnterState()
     {
         context.Animator.SetBool(context.IsWalkingHash, true);
-        context.Animator.SetBool(context.IsRunningHash, false);
     }
 
     public override void UpdateState()
     {
         CheckSwitchState();
-        context.CurrentMovementX = context.CurrentMovementInput.x;
-        context.CurrentMovementZ = context.CurrentMovementInput.y;
+        context.CurrentMovementX = context.CurrentMovementInput.x * context.WalkMultiplier;
+        context.CurrentMovementZ = context.CurrentMovementInput.y * context.WalkMultiplier;
     }
 
     public override void ExitState()
     {
-
+        context.Animator.SetBool(context.IsWalkingHash, false);
     }
 
     public override void InitializeSubState()

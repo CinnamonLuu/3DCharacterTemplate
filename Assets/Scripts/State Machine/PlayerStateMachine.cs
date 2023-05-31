@@ -13,14 +13,17 @@ public class PlayerStateMachine : MonoBehaviour
     //animations
     int isWalkingHash;
     int isRunningHash;
+    int isJumpingHash;
+    int isCrouchingHash;
 
     //movement
     private Vector2 currentMovementInput;
     private Vector3 currentMovement;
-    private Vector3 currentRunMovement;
+    [SerializeField] private float walkMultiplier = 2.0f;
     [SerializeField] private float runMultiplier = 3.0f;
     private bool isMovementPressed;
     private bool isRunPressed;
+    private bool isCrouchPressed;
     [SerializeField] private float rotationFactorPerFrame = 15.0f;
 
     //gravity
@@ -73,9 +76,13 @@ public class PlayerStateMachine : MonoBehaviour
 
     public bool IsMovementPressed=> isMovementPressed;
     public bool IsRunPressed => isRunPressed;
+    public bool IsCrouchPressed => isCrouchPressed;
     public int IsWalkingHash => isWalkingHash;
     public int IsRunningHash => isRunningHash;
+    public int IsJumpingHash => isJumpingHash;
+    public int IsCrouchingHash => isCrouchingHash;
 
+    public float WalkMultiplier=> walkMultiplier;
     public float RunMultiplier=> runMultiplier;
 
     private void OnEnable()
@@ -95,6 +102,8 @@ public class PlayerStateMachine : MonoBehaviour
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
+        isJumpingHash = Animator.StringToHash("isJumping");
+        isCrouchingHash = Animator.StringToHash("isCrouching");
 
         playerInput.CharacterControls.Move.started += onMovmentInput;
         playerInput.CharacterControls.Move.canceled += onMovmentInput;
@@ -105,6 +114,9 @@ public class PlayerStateMachine : MonoBehaviour
 
         playerInput.CharacterControls.Jump.started += onJump;
         playerInput.CharacterControls.Jump.canceled += onJump;
+
+        playerInput.CharacterControls.Crouch.started += onCrouch;
+        playerInput.CharacterControls.Crouch.canceled += onCrouch;
         SetUpJumpVariables();
     }
 
@@ -153,6 +165,10 @@ public class PlayerStateMachine : MonoBehaviour
     void onJump(InputAction.CallbackContext context)
     {
         isJumpPressed = context.ReadValueAsButton();
+    }
+    void onCrouch(InputAction.CallbackContext context)
+    {
+        isCrouchPressed = context.ReadValueAsButton();
     }
 
     private void OnDisable()

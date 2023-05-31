@@ -23,7 +23,8 @@ public class PlayerRunState : BaseState
 
     public override void ExitState()
     {
-
+        context.Animator.SetBool(context.IsWalkingHash, false);
+        context.Animator.SetBool(context.IsRunningHash, false);
     }
 
     public override void InitializeSubState()
